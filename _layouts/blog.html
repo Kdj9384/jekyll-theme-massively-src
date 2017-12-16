@@ -42,12 +42,14 @@
               <h2><a href="#">#1 Opensource project</a></h2>
               <p> 강동진 곽별 김대웅 김민지 </p>
             </header>
+						<p><h3>Images<h3></p>
 						<p> <a href="#" class="image main"><img src="{{ "/images/pic1.png" | absolute_url }}" alt="" /></a></p>
 						<p> <a href="#" class="image main"><img src="{{ "/images/pic2.jpeg" | absolute_url }}" alt="" /></a></p>
 						<p> <a href="#" class="image main"><img src="{{ "/images/pic3.jpeg" | absolute_url }}" alt="" /></a></p>
 						<p> <a href="#" class="image main"><img src="{{ "/images/pic4.jpeg" | absolute_url }}" alt="" /></a></p>
 
           </article>
+					<p><h3>Code<h3></p>
 					<pre><code>
 import smbus
 import time
@@ -297,45 +299,13 @@ if __name__ == '__main__':
 
 					</code></pre>
 					<!-- Post -->
-<!--
-					<section class="posts">
-						{% for post in site.posts %}
-						{% assign mod3 = forloop.index | modulo: 3 %}
-							<article>
-								<header>
-									<span class="date">{{ post.date | date_to_string }}</span>
-									<h2><a href="{{ post.url | absolute_url }}">{{ post.title }}</h2>
-								</header>
-								<a href="{{ post.url | absolute_url }}" class="image fit"><img src="{{ post.image | absolute_url }}" alt="" /></a>
-								<p>{{ post.excerpt }}</p>
-								<ul class="actions">
-									<li><a href="{{ post.url | absolute_url }}" class="button">Full Story</a></li>
-								</ul>
-							</article>
 
-
-							{% if mod3 == 0 %}
-							<article>
-								<header>
-									<h2><a href="#">Sponsored</h2>
-								</header>
-
-							</article>
-							{% endif %}
-						{% endfor %}
-
-					</section>
-
-					</div>
--->
 				<!-- Footer -->
-      <!--  {% include foot.html %} -->
 
 			</div>
 
 			<!-- Scripts -->
-			<!-- {% include scripts-main.html %} -->
-			<!-- {% include tracking.html %} -->
+
 
 	</body>
 </html>
