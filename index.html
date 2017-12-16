@@ -15,17 +15,44 @@ sitemap:
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
 <html>
+	<head>
+    {% include head.html %}
 
+
+	</head>
 	<body class="is-loading">
 
 		<!-- Wrapper -->
 			<div id="wrapper" class="fade-in">
 
 				<!-- Intro -->
+					<div id="intro">
+            <h1>{{site.title}}</h1>
+						<h2>The Jekyll Theme Version</h2>
+						<p>Massively is an HTML5 website theme designed by <a href="https://twitter.com/ajlkn">@ajlkn</a> for <a href="https://html5up.net">HTML5 UP</a><br />
+						and released for free under the <a href="https://html5up.net/license">Creative Commons license</a>. Jekyll integration by <a href="https://somiibo.com">Somiibo</a></p>
+						<ul class="actions">
+							<li><a href="#header" class="button icon solo fa-arrow-down scrolly">Continue</a></li>
+						</ul>
+					</div>
 
 				<!-- Header -->
+					<header id="header">
+						<a href="{{ "/" | absolute_url }}" class="logo">{{site.title}}</a>
+					</header>
 
 				<!-- Nav -->
+					<nav id="nav">
+
+            {% include nav.html %}
+
+						<ul class="icons">
+              <li><a href="https://twitter.com/{{site.twitter}}" class="icon fa-twitter" rel="nofollow"><span class="label">Twitter</span></a></li>
+              <li><a href="https://facebook.com/{{site.facebook}}" class="icon fa-facebook" rel="nofollow"><span class="label">Facebook</span></a></li>
+              <li><a href="https://instagram.com/{{site.instagram}}" class="icon fa-instagram" rel="nofollow"><span class="label">Instagram</span></a></li>
+              <li><a href="https://github.com/{{site.github}}" class="icon fa-github" rel="nofollow"><span class="label">GitHub</span></a></li>
+						</ul>
+					</nav>
 
 				<!-- Main -->
 					<div id="main">
@@ -35,11 +62,37 @@ sitemap:
 									<h2><a href="#">Welcome My portfolio!</a></h2>
 									<p>ICT융합학부 2017012642 강동진</p>
 								</header>
+								<!-- <a href="#" class="image main"><img src="{{ "/images/pic01.jpg" | absolute_url }}" alt="" /></a> -->
                 <p>It's in "Blog" tab</p>
 
 							</article>
 
 						<!-- Posts -->
+							<section class="posts">
+              <!--  {% for post in site.posts limit:3 %}
+                {% assign mod3 = forloop.index | modulo: 3 %} -->
+  								<!-- <article>
+  									<header>
+  										<span class="date">{{ post.date | date_to_string }}</span>
+  										<h2><a href="{{ post.url | absolute_url }}">{{ post.title }}</h2>
+  									</header>
+  									<a href="{{ post.url | absolute_url }}" class="image fit"><img src="{{ post.image | absolute_url }}" alt="" /></a>
+  									<p>{{ post.excerpt }}</p>
+  									<ul class="actions">
+  										<li><a href="{{ post.url | absolute_url }}" class="button">Full Story</a></li>
+  									</ul>
+  								</article>
+                  {% if mod3 == 0 %}
+                   <article>
+  									<header>
+  										<h2><a href="#">Sponsored</h2>
+  									</header>
+
+  								</article>
+                  {% endif %} -->
+                {% endfor %}
+
+							</section>
 
 						<!-- Footer -->
 							<footer>
@@ -51,11 +104,13 @@ sitemap:
 					</div>
 
 				<!-- Footer -->
+        <!--{% include foot.html %}-->
 
 			</div>
 
 		<!-- Scripts -->
-
+		<!-- {% include scripts-main.html %}
+    {% include tracking.html %} -->
 
 	</body>
 </html>
