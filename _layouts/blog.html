@@ -42,261 +42,262 @@
               <h2><a href="#">#1 Opensource project</a></h2>
               <p> 강동진 곽별 김대웅 김민지 </p>
             </header>
-						<p> <a href="#" class="image main"><img src="{{ "/images/pic1.jpg" | absolute_url }}" alt="" /></a></p>
-						<p> <a href="#" class="image main"><img src="{{ "/images/pic2.jpg" | absolute_url }}" alt="" /></a></p>
-						<p> <a href="#" class="image main"><img src="{{ "/images/pic3.jpg" | absolute_url }}" alt="" /></a></p>
-						<p> <a href="#" class="image main"><img src="{{ "/images/pic4.jpg" | absolute_url }}" alt="" /></a></p>
+						<p> <a href="#" class="image main"><img src="{{ "/images/pic1.png" | absolute_url }}" alt="" /></a></p>
+						<p> <a href="#" class="image main"><img src="{{ "/images/pic2.jpeg" | absolute_url }}" alt="" /></a></p>
+						<p> <a href="#" class="image main"><img src="{{ "/images/pic3.jpeg" | absolute_url }}" alt="" /></a></p>
+						<p> <a href="#" class="image main"><img src="{{ "/images/pic4.jpeg" | absolute_url }}" alt="" /></a></p>
 
           </article>
 					<pre><code>
-						import smbus
-						import time
-						import vlc
-						import os
-						import RPi.GPIO as GPIO
-						import ftplib
-						import os
+import smbus
+import time
+import vlc
+import os
+import RPi.GPIO as GPIO
+import ftplib
+import os
 
-						# Define some device parameters
-						I2C_ADDR  = 0x27 # I2C device address
-						LCD_WIDTH = 16   # Maximum characters per line
+# Define some device parameters
+I2C_ADDR  = 0x27 # I2C device address
+LCD_WIDTH = 16   # Maximum characters per line
 
-						# Define some device constants
-						LCD_CHR = 1 # Mode - Sending data
-						LCD_CMD = 0 # Mode - Sending command
+# Define some device constants
+LCD_CHR = 1 # Mode - Sending data
+LCD_CMD = 0 # Mode - Sending command
 
-						LCD_LINE_1 = 0x80 # LCD RAM address for the 1st line
-						LCD_LINE_2 = 0xC0 # LCD RAM address for the 2nd line
-						LCD_LINE_3 = 0x94 # LCD RAM address for the 3rd line
-						LCD_LINE_4 = 0xD4 # LCD RAM address for the 4th line
+LCD_LINE_1 = 0x80 # LCD RAM address for the 1st line
+LCD_LINE_2 = 0xC0 # LCD RAM address for the 2nd line
+LCD_LINE_3 = 0x94 # LCD RAM address for the 3rd line
+LCD_LINE_4 = 0xD4 # LCD RAM address for the 4th line
 
-						LCD_BACKLIGHT  = 0x08  # On
-						#LCD_BACKLIGHT = 0x00  # Off
+LCD_BACKLIGHT  = 0x08  # On
+#LCD_BACKLIGHT = 0x00  # Off
 
-						ENABLE = 0b00000100 # Enable bit
+ENABLE = 0b00000100 # Enable bit
 
-						# Timing constants
-						E_PULSE = 0.0005
-						E_DELAY = 0.0005
+# Timing constants
+E_PULSE = 0.0005
+E_DELAY = 0.0005
 
-						#Open I2C interface
-						#bus = smbus.SMBus(0)  # Rev 1 Pi uses 0
-						bus = smbus.SMBus(1) # Rev 2 Pi uses 1
+#Open I2C interface
+#bus = smbus.SMBus(0)  # Rev 1 Pi uses 0
+bus = smbus.SMBus(1) # Rev 2 Pi uses 1
 
-						def lcd_init():
-						  # Initialise display
-						  lcd_byte(0x33,LCD_CMD) # 110011 Initialise
-						  lcd_byte(0x32,LCD_CMD) # 110010 Initialise
-						  lcd_byte(0x06,LCD_CMD) # 000110 Cursor move direction
-						  lcd_byte(0x0C,LCD_CMD) # 001100 Display On,Cursor Off, Blink Off
-						  lcd_byte(0x28,LCD_CMD) # 101000 Data length, number of lines, font size
-						  lcd_byte(0x01,LCD_CMD) # 000001 Clear display
-						  time.sleep(E_DELAY)
+def lcd_init():
+  # Initialise display
+  lcd_byte(0x33,LCD_CMD) # 110011 Initialise
+  lcd_byte(0x32,LCD_CMD) # 110010 Initialise
+  lcd_byte(0x06,LCD_CMD) # 000110 Cursor move direction
+  lcd_byte(0x0C,LCD_CMD) # 001100 Display On,Cursor Off, Blink Off
+  lcd_byte(0x28,LCD_CMD) # 101000 Data length, number of lines, font size
+  lcd_byte(0x01,LCD_CMD) # 000001 Clear display
+  time.sleep(E_DELAY)
 
-						def lcd_byte(bits, mode):
-						  # Send byte to data pins
-						  # bits = the data
-						  # mode = 1 for data
-						  #        0 for command
+def lcd_byte(bits, mode):
+  # Send byte to data pins
+  # bits = the data
+  # mode = 1 for data
+  #        0 for command
 
-						  bits_high = mode | (bits & 0xF0) | LCD_BACKLIGHT
-						  bits_low = mode | ((bits<<4) & 0xF0) | LCD_BACKLIGHT
+  bits_high = mode | (bits & 0xF0) | LCD_BACKLIGHT
+  bits_low = mode | ((bits<<4) & 0xF0) | LCD_BACKLIGHT
 
-						  # High bits
-						  bus.write_byte(I2C_ADDR, bits_high)
-						  lcd_toggle_enable(bits_high)
+  # High bits
+  bus.write_byte(I2C_ADDR, bits_high)
+  lcd_toggle_enable(bits_high)
 
-						  # Low bits
-						  bus.write_byte(I2C_ADDR, bits_low)
-						  lcd_toggle_enable(bits_low)
+  # Low bits
+  bus.write_byte(I2C_ADDR, bits_low)
+  lcd_toggle_enable(bits_low)
 
-						def lcd_toggle_enable(bits):
-						  # Toggle enable
-						  time.sleep(E_DELAY)
-						  bus.write_byte(I2C_ADDR, (bits | ENABLE))
-						  time.sleep(E_PULSE)
-						  bus.write_byte(I2C_ADDR,(bits & ~ENABLE))
-						  time.sleep(E_DELAY)
+def lcd_toggle_enable(bits):
+  # Toggle enable
+  time.sleep(E_DELAY)
+  bus.write_byte(I2C_ADDR, (bits | ENABLE))
+  time.sleep(E_PULSE)
+  bus.write_byte(I2C_ADDR,(bits & ~ENABLE))
+  time.sleep(E_DELAY)
 
-						def lcd_string(message,line):
-						  # Send string to display
+def lcd_string(message,line):
+  # Send string to display
 
-						  message = message.ljust(LCD_WIDTH," ")
+  message = message.ljust(LCD_WIDTH," ")
 
-						  lcd_byte(line, LCD_CMD)
+  lcd_byte(line, LCD_CMD)
 
-						  for i in range(LCD_WIDTH):
-						    lcd_byte(ord(message[i]),LCD_CHR)
+  for i in range(LCD_WIDTH):
+    lcd_byte(ord(message[i]),LCD_CHR)
 
-						def m_playing(player,a):
-						  while True:
-						    state = player.get_state()
-						    if state == 6:
-						      if a[i] == a[-1]:
-						        i = 0
-						        media = instance.media_new(path_m + a[i])
-						        player.set_media(media)
-						        player.play()
-						        time.sleep(1)
+def m_playing(player,a):
+  while True:
+    state = player.get_state()
+    if state == 6:
+      if a[i] == a[-1]:
+        i = 0
+        media = instance.media_new(path_m + a[i])
+        player.set_media(media)
+        player.play()
+        time.sleep(1)
 
-						      i += 1
-						      media = instance.media_new(path_m + a[i])
-						      player.set_media(media)
-						      player.play()
-						      time.sleep(1)
+      i += 1
+      media = instance.media_new(path_m + a[i])
+      player.set_media(media)
+      player.play()
+      time.sleep(1)
 
-						    if GPIO.input(18) == 0:
-						      time.sleep(0.7)
-						      break
-						    if GPIO.input(23) == 0:
-						      time.sleep(0.7)
-						      player.pause()
-						    if GPIO.input(24) == 0:
-						      time.sleep(0.7)
-						      player.stop()
-						      break
+    if GPIO.input(18) == 0:
+      time.sleep(0.7)
+      break
+    if GPIO.input(23) == 0:
+      time.sleep(0.7)
+      player.pause()
+    if GPIO.input(24) == 0:
+      time.sleep(0.7)
+      player.stop()
+      break
 
-						def main():
-						  # Main program block
-						  stopcnt = 0
-						  # Initialise display
-						  lcd_init()
-						  lcd_string("    LOADING    ",LCD_LINE_1)
-						  lcd_string("....    ",LCD_LINE_2)
+def main():
+  # Main program block
+  stopcnt = 0
+  # Initialise display
+  lcd_init()
+  lcd_string("    LOADING    ",LCD_LINE_1)
+  lcd_string("....    ",LCD_LINE_2)
 
-						  templist = []
-						  dir_list = []
-						  dir_list1 = []
-						  music_list = []
-						  ftpn = ftplib.FTP('192.168.0.114','root','openmediavault')
-						  ftpn.cwd('/mediastorage')
-						  ftpn.retrlines("LIST", templist.append)
-						  i = 0;
+  templist = []
+  dir_list = []
+  dir_list1 = []
+  music_list = []
+  ftpn = ftplib.FTP('192.168.0.114','root','openmediavault')
+  ftpn.cwd('/mediastorage')
+  ftpn.retrlines("LIST", templist.append)
+  i = 0;
 
-						  while i<len(templist):
-						    word = templist[i].split(None,8)
-						    filename = word[-1].lstrip()
-						    dir_list.append(filename)
-						    i+=1
+  while i<len(templist):
+    word = templist[i].split(None,8)
+    filename = word[-1].lstrip()
+    dir_list.append(filename)
+    i+=1
 
-						  i = 0
-						  j = 0
-						  while i<len(dir_list):
-						    ch_name = dir_list[i]
-						    print(ch_name)
-						    ftpn.cwd("/mediastorage/"+ch_name)
-						    music_list = ftpn.nlst()
-						    print(music_list)
-						    path = "/home/pi/Downloads/"+ch_name
-						    if not os.path.isdir(path):
-						      os.mkdir(path)
-						    while j<len(music_list):
-						      if not os.path.isfile(path+"/"+music_list[j]):
-						        fd = open("/home/pi/Downloads/"+ch_name+"/"+music_list[j], 'wb')
-						        ftpn.retrbinary("RETR /mediastorage/"+ch_name+"/"+music_list[j], fd.write)
-						        fd.close()
-						      j+=1
-						    j=0
-						    i+=1
+  i = 0
+  j = 0
+  while i<len(dir_list):
+    ch_name = dir_list[i]
+    print(ch_name)
+    ftpn.cwd("/mediastorage/"+ch_name)
+    music_list = ftpn.nlst()
+    print(music_list)
+    path = "/home/pi/Downloads/"+ch_name
+    if not os.path.isdir(path):
+      os.mkdir(path)
+    while j<len(music_list):
+      if not os.path.isfile(path+"/"+music_list[j]):
+        fd = open("/home/pi/Downloads/"+ch_name+"/"+music_list[j], 'wb')
+        ftpn.retrbinary("RETR /mediastorage/"+ch_name+"/"+music_list[j], fd.write)
+        fd.close()
+      j+=1
+    j=0
+    i+=1
 
-						  GPIO.setmode(GPIO.BCM)
-						  GPIO.setup(22, GPIO.IN)
-						  GPIO.setup(23, GPIO.IN)
-						  GPIO.setup(24, GPIO.IN)
-						  GPIO.setup(18, GPIO.IN)
-						  #GPIO.setup(21, GPIO.IN)
+  GPIO.setmode(GPIO.BCM)
+  GPIO.setup(22, GPIO.IN)
+  GPIO.setup(23, GPIO.IN)
+  GPIO.setup(24, GPIO.IN)
+  GPIO.setup(18, GPIO.IN)
+  #GPIO.setup(21, GPIO.IN)
 
-						  instance = vlc.Instance()
-						  player = instance.media_player_new()
+  instance = vlc.Instance()
+  player = instance.media_player_new()
 
-						  if os.path.isfile("/home/pi/Downloads/load.txt"):
-						    f = open("/home/pi/Downloads/load.txt", 'r')
-						    line = f.readline()
-						    if line == None:
-						      index = 0
-						    else:
-						      loadindex = dir_list.index(line)
-						      index = loadindex
-						  else:
-						    index = 0
+  if os.path.isfile("/home/pi/Downloads/load.txt"):
+    f = open("/home/pi/Downloads/load.txt", 'r')
+    line = f.readline()
+    if line == None:
+      index = 0
+    else:
+      loadindex = dir_list.index(line)
+      index = loadindex
+  else:
+    index = 0
 
-						  while True:
-						    path_m = "/home/pi/Downloads/"+dir_list[index]+"/"
-						    i = 0
-						    a = os.listdir(path_m)
-						    media = instance.media_new(path_m+ a[i])
-						    player.set_media(media)
+  while True:
+    path_m = "/home/pi/Downloads/"+dir_list[index]+"/"
+    i = 0
+    a = os.listdir(path_m)
+    media = instance.media_new(path_m+ a[i])
+    player.set_media(media)
 
 
-						    player.play()
-						    while True:
-						      lcd_string(a[i],LCD_LINE_1)
-						      lcd_string("Channel : "+dir_list[index],LCD_LINE_2)
-						      print(a[i])
-						      print(a)
+    player.play()
+    while True:
+      lcd_string(a[i],LCD_LINE_1)
+      lcd_string("Channel : "+dir_list[index],LCD_LINE_2)
+      print(a[i])
+      print(a)
 
-						      state = player.get_state()
-						      if state == 6:
-						        if a[i] == a[-1]:
-						          i = 0
-						          media = instance.media_new(path_m + a[i])
-						          lcd_string(a[i],LCD_LINE_1)
-						          player.set_media(media)
-						          player.play()
-						          time.sleep(1)
-						          continue
+      state = player.get_state()
+      if state == 6:
+        if a[i] == a[-1]:
+          i = 0
+          media = instance.media_new(path_m + a[i])
+          lcd_string(a[i],LCD_LINE_1)
+          player.set_media(media)
+          player.play()
+          time.sleep(1)
+          continue
 
-						        i += 1
-						        media = instance.media_new(path_m + a[i])
-						        lcd_string(a[i],LCD_LINE_1)
-						        player.set_media(media)
-						        player.play()
-						        time.sleep(1)
+        i += 1
+        media = instance.media_new(path_m + a[i])
+        lcd_string(a[i],LCD_LINE_1)
+        player.set_media(media)
+        player.play()
+        time.sleep(1)
 
-						      if GPIO.input(18) == 0: #next
-						        time.sleep(0.7)
-						        break
-						      if GPIO.input(23) == 0: #pause
-						        time.sleep(0.7)
-						        player.pause()
-						      if GPIO.input(24) == 0: #stop
-						        time.sleep(3)
-						        stopcnt += 1
+      if GPIO.input(18) == 0: #next
+        time.sleep(0.7)
+        break
+      if GPIO.input(23) == 0: #pause
+        time.sleep(0.7)
+        player.pause()
+      if GPIO.input(24) == 0: #stop
+        time.sleep(3)
+        stopcnt += 1
 
-						        loadfile = open("/home/pi/Downloads/load.txt", 'w')
-						        loadfile.write(dir_list[index])
-						        loadfile.close()
-						        break
+        loadfile = open("/home/pi/Downloads/load.txt", 'w')
+        loadfile.write(dir_list[index])
+        loadfile.close()
+        break
 
-						    if dir_list[-1] == dir_list[index]:
-						      index = 0
-						    else:
-						      index += 1
+    if dir_list[-1] == dir_list[index]:
+      index = 0
+    else:
+      index += 1
 
-						    if stopcnt == 1:
-						      break
+    if stopcnt == 1:
+      break
 
-						  lcd_string("Good Bye",LCD_LINE_1)
-						  lcd_string("4",LCD_LINE_2)
-						  time.sleep(1)
-						  lcd_string("3",LCD_LINE_2)
-						  time.sleep(1)
-						  lcd_string("2",LCD_LINE_2)
-						  time.sleep(1)
-						  lcd_string("1",LCD_LINE_2)
-						  time.sleep(1)
+  lcd_string("Good Bye",LCD_LINE_1)
+  lcd_string("4",LCD_LINE_2)
+  time.sleep(1)
+  lcd_string("3",LCD_LINE_2)
+  time.sleep(1)
+  lcd_string("2",LCD_LINE_2)
+  time.sleep(1)
+  lcd_string("1",LCD_LINE_2)
+  time.sleep(1)
 
-						if __name__ == '__main__':
+if __name__ == '__main__':
 
-						  try:
-						    main()
-						  except KeyboardInterrupt:
-						    pass
-						  finally:
-						    lcd_byte(0x01, LCD_CMD)
+  try:
+    main()
+  except KeyboardInterrupt:
+    pass
+  finally:
+    lcd_byte(0x01, LCD_CMD)
+
 					</code></pre>
 					<!-- Post -->
-					<!--
+<!--
 					<section class="posts">
 						{% for post in site.posts %}
 						{% assign mod3 = forloop.index | modulo: 3 %}
@@ -326,7 +327,7 @@
 					</section>
 
 					</div>
-				-->
+-->
 				<!-- Footer -->
       <!--  {% include foot.html %} -->
 
